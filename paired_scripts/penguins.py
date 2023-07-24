@@ -65,16 +65,15 @@ penguins
 penguins.describe()
 
 # %%
-# penguins[num_features].hist(bins=30, figsize=(15,10))
-
-# %%
 import seaborn as sns
 
 pairplot_figure = sns.pairplot(penguins[num_features+['species']], hue="species")
 
 # %% [markdown]
+# ## Features Selection
 # The complete pairwise plots of our features show that there are 2-feature pairs between `bill_length_mm` and any of `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g` being able to separate 3 species the best.
-#
+
+# %% [markdown]
 # We will firstly make a classification model with 2 features for the sake of visualization. The selected features are `bill_length_mm` and `flipper_length_mm`.
 
 # %%
@@ -83,7 +82,7 @@ selected_features = ['bill_length_mm', 'flipper_length_mm']
 
 # %% [markdown]
 # ## Data Splitting
-# Every supervised machine learning model needs a dataset to train on to be able to predict unseen data and that data splitting comes into play. We split the whole dataset into a training set, generally a bigger portion, and the rest as a testing set to act as unseen data for model evaluation.
+# Machine learning algorithms need a dataset to train on to be able to predict unseen data and that data splitting comes into play. We split the whole dataset into a training set, generally a bigger portion, and the rest as a testing set to act as unseen data for model evaluation.
 
 # %%
 from sklearn.model_selection import train_test_split
@@ -126,9 +125,10 @@ svm.score(X_test, y_test)
 # Let's see how our SVM model learn to distinguish the (training) data from 3 species visually.
 
 # %%
+import matplotlib.pyplot as plt
 import matplotlib.patches
 
-def plot_svm2d(X, f1, f2, y, svm):
+def plot_svm2d(X, f1, f2, y, svm, title):
     # create a predicted mesh
     s = 0.2
     x_min, x_max = X[f1].min() - 1, X[f1].max() + 1
@@ -150,11 +150,11 @@ def plot_svm2d(X, f1, f2, y, svm):
     ax.scatter(X[f1], X[f2], c=levels, cmap=plt.cm.coolwarm, edgecolors='black')
     ax.set_xlabel('bill_length_mm')
     ax.set_ylabel('flipper_length_mm')
-    ax.set_title("SVM")
+    ax.set_title(title)
     ax.legend(handles=handles, title='Species')
     plt.show()
 
-plot_svm2d(X_train, selected_features[0], selected_features[1], y_train, svm)
+plot_svm2d(X_train, selected_features[0], selected_features[1], y_train, svm, "SVM")
 
 # %% [markdown]
 # As you can see, our SVM misclassifies a lot of Chinstrap penquins in the train set. Something we can do here is to scale our numerical features. This is crucial for many machine learning algorithms, as they can be sensitive to the scale of the input features.
@@ -180,92 +180,37 @@ model
 model.fit(X_train, y_train)
 print(f'Training set Accuracy: {model.score(X_train, y_train)}')
 print(f'Testing set Accuracy: {model.score(X_test, y_test)}')
-plot_svm2d(X_train, selected_features[0], selected_features[1], y_train, model)
+plot_svm2d(X_train, selected_features[0], selected_features[1], y_train, model, "with scaled features")
 
 # %% [markdown]
 # Our model now generalizes much better with a simple scaling trick!
 
 # %% [markdown]
-# ## Model 
+# ## Experiment with mislabeling
+
+# %% [markdown]
+# As supervised machine learning models require target (labeled) data to learn the mapping from input data, data acquisition and annotation play very important roles for such algorithms to have accurate true labels, classes for classification task and values for regression task, to learn about realistic natures of data.
+#
+# This introductory experiment shows how mislabeling can affect the learning algorithm, by simply randomly changing the penguin species in our dataset to either of the other 2 classes. We construct the experiment with ipywidget allowing to specify the amount of mislabeled data interactively.
+#
+# Let's execute this experiment in the code blocks below.
 
 # %%
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.model_selection import cross_validate
-from sklearn.metrics import make_scorer
-from sklearn.metrics import matthews_corrcoef as mcc
-from sklearn.metrics import accuracy_score as acc
+# repeated here again, features selection
+selected_features = ['bill_length_mm', 'flipper_length_mm']
+
+# %%
 from sklearn.utils import resample
 
 from ipywidgets import interact
 import ipywidgets as widgets
 
-def svm_interact(sFeatures, trainsize, mislabel):
-    status_widget.value = 'Calculating...'
-    selected = np.array(sFeatures)
-    X, y = penguins[selected], penguins[target[0]]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=trainsize, random_state=21, stratify=y)
-
-    if mislabel > 0.0:
-        y_mis = resample(y_train, n_samples=int(y_train.shape[0]*mislabel), replace=False, random_state=21)
-        for i in y_mis.index:
-            label=['Chinstrap','Gentoo','Adelie']
-            label.remove(y_mis[i])
-            newlabel = resample(label, n_samples=1)[0]
-            y_train[i] = newlabel
-
-    num_transformer = StandardScaler()
-    cat_transformer = OneHotEncoder(handle_unknown='ignore')
-    if 'sex' in selected:
-        transformers=[
-            ('num', num_transformer, selected[:-1]),
-            ('cat', cat_transformer, selected[-1:])
-        ]
-    else:
-        transformers=[
-            ('num', num_transformer, selected)
-        ]
-        
-    preprocessor = ColumnTransformer(transformers=transformers)
-    
-    
-    model = Pipeline(steps=[
-        ('preprocessor', preprocessor),
-        ('classifier', SVC()),
-    ])
-
-    mcc_scorer = make_scorer(mcc)
-    acc_scorer = make_scorer(acc)
-    scores = cross_validate(model, X_train, y_train, cv=5,
-                            scoring={"MCC": mcc_scorer, "ACC": acc_scorer})
-
-    print("Cross Validation on training set")
-    for k, v in scores.items():
-        print(k, " : ", v)
-    print("Avg ACC in CV: ", np.average(scores["test_ACC"]))
-    print("Avg MCC in CV: ", np.average(scores["test_MCC"]))
-    print()
-
-    X2_train, X2_test, y2_train, y2_test = train_test_split(X_train, y_train, train_size=0.8, random_state=21, stratify=y_train)
-    model = model.fit(X2_train, y2_train)
-    print("Evaluation on test set")
-    print("ACC: ", acc_scorer(model, X2_test, y2_test))
-    print("MCC: ", mcc_scorer(model, X2_test, y2_test))
-    
-    status_widget.value = 'Calculation completed!'
-
-features_widget = widgets.SelectMultiple(
-    options=features,
-    value=[features[0], features[1]],
-    description='Features:',
-    disabled=False
-)
 trainsize_widget = widgets.FloatSlider(
     value=0.7,
     min=0.5,
     max=0.8,
     step=0.05,
-    description='%train data:',
+    description='Training size:',
     disabled=False,
     continuous_update=False,
     orientation='horizontal',
@@ -273,7 +218,7 @@ trainsize_widget = widgets.FloatSlider(
     readout_format='.0%',
 )
 mislabel_widget = widgets.FloatSlider(
-    value=0.0,
+    value=0.2,
     min=0.0,
     max=0.5,
     step=0.005,
@@ -286,5 +231,40 @@ mislabel_widget = widgets.FloatSlider(
 )
 status_widget = widgets.Label(value='')
 
-interact(svm_interact, sFeatures=features_widget, trainsize=trainsize_widget, mislabel=mislabel_widget)
+def svm_interact(trainsize, mislabel):
+    status_widget.value = 'Calculating...'
+    
+    X, y = penguins[selected_features].copy(), penguins[target[0]].copy()
+    
+    if mislabel > 0.0:
+        y_mis = resample(y, n_samples=int(y.shape[0]*mislabel), replace=False, random_state=21)
+        for i in y_mis.index:
+            label=['Chinstrap','Gentoo','Adelie']
+            label.remove(y_mis[i])
+            newlabel = resample(label, n_samples=1)[0]
+            y[i] = newlabel
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=trainsize, random_state=21, stratify=y)
+
+    num_scaler = StandardScaler()
+
+    model = Pipeline(steps=[
+        ('scaler', num_scaler),
+        ('classifier', SVC())
+    ])
+
+    model.fit(X_train, y_train)
+    
+    plot_svm2d(X_train, selected_features[0], selected_features[1], y_train, model, "Mislabeling experiment")
+    print(f'Training set Accuracy: {model.score(X_train, y_train)}')
+    print(f'Testing set Accuracy: {model.score(X_test, y_test)}')
+    
+    status_widget.value = 'Calculation completed!'
+
+interact(svm_interact, trainsize=trainsize_widget, mislabel=mislabel_widget)
 display(status_widget)
+
+# %% [markdown]
+# The "Training size" slider controls the number of training data split and the rest will be in the testing split. The "Mislabeled" slider specifies the amount of incorrectly labeled data in the whole dataset because regardless of training or testing splits they are from the same data acquisition and annotation processes.
+#
+# It can be observe from the plot that, as the number of mislabeled data increases, the overall data are cluttered meaning the true shape of data is not presented. The decision boundaries are also affected, which will not be a good enough model to classify unseen data.
