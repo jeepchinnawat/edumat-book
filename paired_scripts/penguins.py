@@ -19,6 +19,8 @@
 # This notebook uses [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. The dataset in CSV format used is downloaded from [here](https://gist.github.com/slopp/ce3b90b9168f2f921784de84fa445651).
 #
 # The following tutorial is partly from [Increase citations, ease review & foster collaboration](https://ml.recipes) book by [Jesper Dramsch](https://ml.recipes).
+#
+# After some data inspection, a SVM model is trained to classify species of penguins based on 2 features selected from a data analysis.Finally, we look into a simple experiment of how decreasing in annotation quality, in which some labels are misclassified, would affect the outcome of an ML model.
 
 # %% [markdown] editable=true slideshow={"slide_type": ""}
 # Let's have the data loaded and briefly look at the data.
@@ -70,7 +72,7 @@ import seaborn as sns
 pairplot_figure = sns.pairplot(penguins[num_features+['species']], hue="species")
 
 # %% [markdown]
-# ## Features Selection
+# ### Features Selection
 # The complete pairwise plots of our features show that there are 2-feature pairs between `bill_length_mm` and any of `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g` being able to separate 3 species the best.
 
 # %% [markdown]
