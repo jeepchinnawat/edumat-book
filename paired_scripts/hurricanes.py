@@ -1,6 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: book//ipynb,paired_scripts//py:percent
 #     text_representation:
 #       extension: .py
 #       format_name: percent
@@ -120,12 +121,14 @@ hurricanes.groupby('Type').Type.count().plot(kind='bar')
 # %%
 from sklearn.model_selection import train_test_split
 
-X,y = hurricanes[selected_features].copy(), hurricanes["Type"].copy()
+X,y = hurricanes[selected_features].copy(), hurricanes[label[0]].copy()
 X_train, X_test, y_train, y_test = \
     train_test_split(X, y, train_size=.7, random_state=20, stratify=y)
 
 # %% [markdown]
 # ## Classification Model
+
+# %%
 
 # %% [markdown]
 # ### Classification Report
