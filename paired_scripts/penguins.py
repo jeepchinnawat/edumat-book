@@ -150,8 +150,8 @@ def plot_svm2d(X, f1, f2, y, svm, title):
     levels, categories = pd.factorize(y, sort=True)
     handles = [matplotlib.patches.Patch(color=plt.cm.coolwarm.resampled(3)(i), label=c) for i, c in enumerate(categories)]
     ax.scatter(X[f1], X[f2], c=levels, cmap=plt.cm.coolwarm, edgecolors='black')
-    ax.set_xlabel('bill_length_mm')
-    ax.set_ylabel('flipper_length_mm')
+    ax.set_xlabel(f1)
+    ax.set_ylabel(f2)
     ax.set_title(title)
     ax.legend(handles=handles, title='Species')
     plt.show()
@@ -201,7 +201,7 @@ plot_svm2d(X_train, selected_features[0], selected_features[1], y_train, model, 
 # repeated here again, features selection
 selected_features = ['bill_length_mm', 'flipper_length_mm']
 
-# %%
+# %% editable=true slideshow={"slide_type": ""}
 from sklearn.utils import resample
 
 from ipywidgets import interact
@@ -266,7 +266,7 @@ def svm_interact(trainsize, mislabel):
 interact(svm_interact, trainsize=trainsize_widget, mislabel=mislabel_widget)
 display(status_widget)
 
-# %% [markdown]
+# %% [markdown] editable=true slideshow={"slide_type": ""}
 # The "Training size" slider controls the number of training data split and the rest will be in the testing split. The "Mislabeled" slider specifies the amount of incorrectly labeled data in the whole dataset because regardless of training or testing splits they are from the same data acquisition and annotation processes.
 #
 # It can be observe from the plot that, as the number of mislabeled data increases, the overall data are cluttered meaning the true shape of data is not presented. The decision boundaries are also affected, which will not be a good enough model to classify unseen data.
