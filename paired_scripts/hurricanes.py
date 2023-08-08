@@ -15,6 +15,11 @@
 
 # %% [markdown]
 # # (outlined) North Atlantic Hurricanes
+# The learning objectives of this notebook are to carry out feature selection for a classification model, train a classification model for types of hurricanes, and understand outcomes of feature uncertainty based on a experiment.
+#
+# The [North Atlantic Hurricanes dataset](https://myweb.fsu.edu/jelsner/temp/Data.html) used is developed by James B. Elsner and colleagues containing hurricanes recorded during the years 1944 to 2000. Each hurricane instance contains the year, the name (if it was named), the coordinates where it started, the last coordinates measured, the maximum coordinates (based on an aspect that an increment means closer to the coast), the maximum intensity, and the type. They are labeled into 3 types: tropical hurricanes (Type 0), hurricanes under baroclinic influences (Type 1), and hurricanes from baroclinic initiation (Type 3).
+#
+# Let's start with loading the data.
 
 # %%
 from pathlib import Path
@@ -36,12 +41,21 @@ hurricanes
 # %%
 hurricanes.info()
 
+# %% [markdown]
+# We will leave out the year and go on with first, last, and maximum cooridinates and maximum intensity as our potential fields for classification task.
+
 # %%
 features = ['FirstLat','FirstLon','MaxLat','MaxLon','LastLat','LastLon','MaxInt']
 label = ['Type']
 
+# %% [markdown]
+# We can look at simple statistics of our features with `describe` function of pandas' dataframe.
+
 # %%
 hurricanes[features].describe()
+
+# %% [markdown]
+# Simply replacing `describe` with `boxplot`, we can visualize some of stats above with box plot.
 
 # %%
 hurricanes[features].boxplot()
@@ -108,13 +122,35 @@ fig.tight_layout()
 plt.show()
 
 # %%
-selected_features = ["FirstLat", 'MaxLat']
+selected_features = ['FirstLat', 'MaxLat', 'MaxInt']
+
+# %% [markdown]
+# ## Why not FirstLat,MaxLat together?
+
+# %%
+import seaborn as sns
+
+fig, axs = plt.subplots(1,2, figsize=(10, 4))
+
+hurricanes.plot.scatter('FirstLat', 'MaxLat', c='Type', colormap='coolwarm_r', ax=axs[0])
+axs[0].set_title("FirstLat, MaxLat")
+
+# the abs. correlation matrix
+df = pd.DataFrame(hurricanes, columns=selected_features)
+abs_corr = df.corr().abs()
+sns.heatmap(abs_corr, center=0, square=True, linewidths=.5, cbar_kws={"shrink": .5}, ax=axs[1])
+axs[1].set_title("Absolute Correlations")
+
+plt.show()
+
+# %%
+selected_features = ['FirstLat', 'MaxInt']
 
 # %% [markdown]
 # ## Stratified Data Splitting
 
 # %%
-hurricanes.groupby('Type').Type.count().plot(kind='bar')
+hurricanes.groupby('Type').Type.count().plot(kind='bar', color='skyblue')
 plt.show()
 
 # %%
@@ -129,8 +165,14 @@ X_train, X_test, y_train, y_test = \
 
 # %%
 from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 
-svm = SVC()
+svm = Pipeline(steps=[
+    ('scaler', StandardScaler()),
+    ('svc', SVC())
+])
+
 svm.fit(X_train, y_train)
 svm.score(X_train, y_train)
 
@@ -142,6 +184,7 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import confusion_matrix
 
 y_pred = svm.predict(X_test)
+
 disp = ConfusionMatrixDisplay.from_predictions(y_test, y_pred, xticks_rotation = 'vertical',
                                                cmap=plt.cm.Blues)
 disp.figure_.suptitle("Confusion Matrix")
@@ -203,21 +246,26 @@ def plot_2DClassifier(X, f, y, classifier, title):
 from ipywidgets import interact, fixed
 import ipywidgets as widgets
 
-def svc_interact(C, gamma, svc):
+def svc_interact(C, gamma, model):
     status_widget.value = 'Calculating...'
     
-    svc.set_params(**{'C': C, 'gamma': gamma})
-    svc.fit(X_train, y_train)
-    plot_2DClassifier(X_train, selected_features, y_train, svc, "SVM w/ training set")
+    model.named_steps.svc.set_params(**{'C': C, 'gamma': gamma})
+
+    model.fit(X_train, y_train)
+    plot_2DClassifier(X_train, selected_features, y_train, model, "SVM w/ training set")
     
-    status_widget.value = f'Test set accuracy : {svc.score(X_test, y_test)}'
+    status_widget.value = f'Test set accuracy : {model.score(X_test, y_test)}'
 
 C_widget = widgets.FloatLogSlider(value=10., min=-3, max=2, base=10, step=0.2, description='C:', disabled=False, continuous_update=False, orientation='horizontal', readout=True, readout_format='.3f')
-gamma_widget = widgets.FloatLogSlider(value=0.01, min=-3, max=2, base=10, step=0.2, description='Gamma:', disabled=False, continuous_update=False, orientation='horizontal', readout=True, readout_format='.3f')
+gamma_widget = widgets.FloatLogSlider(value=0.25, min=-3, max=2, base=10, step=0.2, description='Gamma:', disabled=False, continuous_update=False, orientation='horizontal', readout=True, readout_format='.3f')
 status_widget = widgets.Label(value='')
 
-bi_svm = SVC()
-interact(svc_interact, C=C_widget, gamma=gamma_widget, svc=fixed(bi_svm))
+bi_svm = Pipeline(steps=[
+    ('scaler', StandardScaler()),
+    ('svc', SVC())
+])
+
+interact(svc_interact, C=C_widget, gamma=gamma_widget, model=fixed(bi_svm))
 display(status_widget)
 
 # %% [markdown]

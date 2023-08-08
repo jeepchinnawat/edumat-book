@@ -16,7 +16,7 @@
 # %% [markdown] editable=true slideshow={"slide_type": ""}
 # # Palmer Penguins
 #
-# This notebook uses [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. The dataset in CSV format used is downloaded from [here](https://gist.github.com/slopp/ce3b90b9168f2f921784de84fa445651).
+# In this notebook, a classification of penguins into 3 species is carried out based on [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. The dataset in CSV format used is downloaded from [here](https://gist.github.com/slopp/ce3b90b9168f2f921784de84fa445651). Additionally, a simple mislabeling experiment is introduced as a start in learning data annotation quality and uncertainy and their outcomes.
 #
 # The following tutorial is partly from [Increase citations, ease review & foster collaboration](https://ml.recipes) book by [Jesper Dramsch](https://ml.recipes).
 #
