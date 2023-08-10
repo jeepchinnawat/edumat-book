@@ -55,7 +55,7 @@ label = ['Type']
 hurricanes[features].describe()
 
 # %% [markdown]
-# Simply replacing `describe` with `boxplot`, we can visualize some of stats above with box plot.
+# Simply replacing `describe` with `boxplot` function, we can visualize some of stats above with box plot.
 
 # %%
 hurricanes[features].boxplot()
@@ -63,49 +63,51 @@ plt.show()
 
 # %% [markdown]
 # ## Feature Selection
+# In learning and working on machine learning or data science models in general, you sometimes have small datasets, but oftentimes you encounter with large datasets. They can be large by a big number of data instances or a number of features or both. However, a large number of features, also called a high dimensional dataset, is considered to be more critical to look at, because the larger it is, the bigger the feature space and the longer time learning algorithms take to find optimal solution to predict target variables. Also with irrelevant and unimportant features included, they can negatively impact models performance.
+#
+# The following sections demonstrate two feature selection techniques including univariate selection and Random Forrest's feature importances.
 
 # %% [markdown]
 # ### Univariate Selection
+#
+# Statistical tests can be used to check how well each feature discriminates between classes of a target (categorical) variable. To quantify such tests, We use scikit-learn's ANOVA (analysis of variance) F-value `f_classif` together with `SelectKBest` to select features according to the k highest scores, in our case 2.
 
 # %%
 from sklearn.feature_selection import SelectKBest, f_classif
 
-selector = SelectKBest(f_classif, k=2)
-selector.fit(hurricanes[features], hurricanes[label[0]])
-scores = selector.scores_
+f_test = SelectKBest(f_classif, k=2)
+f_test.fit(hurricanes[features], hurricanes[label[0]])
+scores = f_test.scores_
 
 features_scores = pd.Series(scores, index=features)
 
 fig, ax = plt.subplots()
 features_scores.plot.barh(ax=ax, color='skyblue')
 ax.grid(True, which='both', color='grey', linewidth=0.3)
-ax.set_title("Univariate selection toward label 'Type'")
+ax.set_title("Univariate selection for label 'Type'")
 ax.set_xlabel("score")
 fig.tight_layout()
 plt.show()
 
 # %% [markdown]
+# #### Intuition
+# To understand how these statistical tests quantify features' discriminating scores, we plot the distributions of each hurricane type toward the feature with highest score `FirstLat` and the least one `FirstLon`.
+#
+# The graph shows that, even though the projected distributions onto `FirstLat` do not clearly discriminate the 3 classes, they do much better than those of `FirstLon` where all class distributions are completely overlapped onto each other.
+
+# %%
+import seaborn as sns
+
+sns.jointplot(data=hurricanes, x="FirstLon", y="FirstLat", hue="Type", palette="tab10")
+plt.show()
+
+# %% [markdown]
 # ### Random Forest's Feature Importance
+# A Random Forest can be used to estimate the importances of features on a particular task. An importance of a feature is measured by looking at how much the tree nodes using that feature reduce impurity (Gini or Shannon information gain) across all trees in the forest on average.
 
 # %%
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
 
-# Parameters for GridSearch
-param_grid = {
-'n_estimators': [10, 20, 30, 40],
-'max_depth': [2,4,6, 8],
-'min_samples_split': [2, 4],
-    'max_features': [1,2,4,7]
-}
-
-# rf = RandomForestClassifier(random_state=20, n_jobs=2,min_samples_leaf=1)
-# # Grid search with cross-validation
-# cv_rf = GridSearchCV(estimator=rf, param_grid=param_grid)
-# cv_rf.fit(X_train, y_train)
-# print(f"Best parameters: {cv_rf.best_params_}")
-
-# %%
 rf = RandomForestClassifier(random_state=0, n_jobs=2, min_samples_leaf=1,
                             max_depth=4, max_features=2, min_samples_split=2, n_estimators=40)
 rf.fit(hurricanes[features], hurricanes[label[0]])
