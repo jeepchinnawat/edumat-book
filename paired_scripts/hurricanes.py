@@ -65,7 +65,7 @@ plt.show()
 # ## Feature Selection
 # In learning and working on machine learning or data science models in general, you sometimes have small datasets, but oftentimes you encounter with large datasets. They can be large by a big number of data instances or a number of features or both. However, a large number of features, also called a high dimensional dataset, is considered to be more critical to look at, because the larger it is, the bigger the feature space and the longer time learning algorithms take to find optimal solution to predict target variables. Also with irrelevant and unimportant features included, they can negatively impact models performance.
 #
-# The following sections demonstrate two feature selection techniques including univariate selection and Random Forrest's feature importances.
+# Although the hurricanes dataset we have is not large, we can take this chance to apply feature selection methods to find two best features to build a classification model with, so that visualizing figures for a predictor is convenient on 2D plots. The following sections demonstrate two feature selection techniques including univariate selection and Random Forrest's feature importances.
 
 # %% [markdown]
 # ### Univariate Selection
@@ -103,7 +103,7 @@ plt.show()
 
 # %% [markdown]
 # ### Random Forest's Feature Importance
-# A Random Forest can be used to estimate the importances of features on a particular task. An importance of a feature is measured by looking at how much the tree nodes using that feature reduce impurity (Gini or Shannon information gain) across all trees in the forest on average.
+# A Random Forest can be used to estimate the importances of features on a particular task. An importance of a feature is measured by looking at how much the tree nodes using that feature reduce impurity (Gini or Shannon information gain) across all trees in the forest on average, called mean decrease in impurity.
 
 # %%
 from sklearn.ensemble import RandomForestClassifier
@@ -123,25 +123,37 @@ ax.set_xlabel("Mean decrease in impurity")
 fig.tight_layout()
 plt.show()
 
+# %% [markdown]
+# We get the agreement between these two feature selection techniques whose tne best choices of features suggested for predicting the types of hurricanes are the first and maximum latitudes and the maximum intensity (`FirstLat`, `MaxLat`, and `MaxInt`).
+
 # %%
 selected_features = ['FirstLat', 'MaxLat', 'MaxInt']
 
 # %% [markdown]
-# ## Why not FirstLat,MaxLat together?
+# However, our goal is to have two features. While picking the two most scored fearues `FirstLat` and `MaxLat` might intuitively sound like a descent choice, there is one more approach we can make use of to eliminate some features and that is feature correlation.
+
+# %% [markdown]
+# ## Feature Correlation
+# When two features are highly correlated, they are considered to provide the knowledge about the target variables or labels, and therefore it is redundant to include both in a model.
+#
+# `FirstLat` and `MaxLat` are highly correlated. The data instances projected into both features' spaces also distribute toward our target variable `Type` very similarly. As a result, `FirstLat` and `MaxInt` are the selected feature for building the classification model with.
 
 # %%
 import seaborn as sns
 
-fig, axs = plt.subplots(1,2, figsize=(10, 4))
-
-hurricanes.plot.scatter('FirstLat', 'MaxLat', c='Type', colormap='coolwarm_r', ax=axs[0])
-axs[0].set_title("FirstLat, MaxLat")
+fig, axs = plt.subplots(1,3, figsize=(20, 5))
 
 # the abs. correlation matrix
 df = pd.DataFrame(hurricanes, columns=selected_features)
 abs_corr = df.corr().abs()
-sns.heatmap(abs_corr, center=0, square=True, linewidths=.5, cbar_kws={"shrink": .5}, ax=axs[1])
-axs[1].set_title("Absolute Correlations")
+sns.heatmap(abs_corr, center=0, square=True, annot=True, linewidths=.5, cbar_kws={"shrink": .5}, ax=axs[0])
+axs[0].set_title("Absolute Correlations")
+
+hurricanes.plot.scatter('FirstLat', 'Type', c='Type', colormap='coolwarm_r', ax=axs[1])
+axs[1].set_title("FirstLat, Type")
+
+hurricanes.plot.scatter('MaxLat', 'Type', c='Type', colormap='coolwarm_r', ax=axs[2], sharey=axs[1])
+axs[2].set_title("MaxLat, Type")
 
 plt.show()
 
@@ -195,6 +207,7 @@ plt.show()
 
 # %% [markdown]
 # ### Transform to binary classification
+# - Tropical-or-not classification since the previous model is pretty good at prediction tropical hurricanes.
 
 # %%
 tropical = hurricanes.copy()
@@ -237,12 +250,13 @@ def plot_2DClassifier(X, f, y, classifier, title):
     ax.set_xlabel(f1)
     ax.set_ylabel(f2)
     ax.set_title(title)
-    ax.legend(handles=handles)
+    ax.legend(handles=handles, title='Type')
     plt.show()
 
 
 # %% [markdown] editable=true slideshow={"slide_type": ""}
-# ### SVM's hyperparameters (interactive w/ ipywidgets)
+# ### SVM for binary classification
+# - with interactive hyperparameters w/ ipywidgets
 
 # %% editable=true slideshow={"slide_type": ""}
 from ipywidgets import interact, fixed
@@ -275,8 +289,6 @@ display(status_widget)
 # - Assume above the decision boundary(model) as a model a data annotator uses to label trocical hurricanes
 # - features X also as true measurements
 # - Re-classify X with the model to have truely annotated labels (wrt. an annotator)
-#
-# (Re-classify the features with the model to have a perfectly separable dataset and then add Gaussian noise the the features to see the outcome.)
 
 # %%
 true_y = bi_svm.predict(X)
@@ -286,7 +298,7 @@ plot_2DClassifier(X, selected_features, true_y, bi_svm, "True measurements wrt. 
 
 # %% [markdown]
 # ### Add Gaussian noise to features
-# (Expected: Affecting data points in the vicinity of decision boundaries)
+# - Expected: Affecting data points in the vicinity of decision boundaries to be the mislabeled data instances
 
 # %% editable=true slideshow={"slide_type": ""}
 def noise_interact(sd):
