@@ -236,8 +236,6 @@ plt.show()
 
 # %% [markdown] id="c0ff1689-f072-47fb-84c9-7b448c0c093c"
 # ### Transform to binary classification
-# - Tropical-or-not classification since the previous model is pretty good at prediction tropical hurricanes.
-#
 # As seen in the previous steps, the model predicts Type 0 tropical hurricanes well, but has difficulty distinguishing between Type 1 hurricanes under baroclinic influences, and Type 3 hurricanes from baroclinic initiation.
 #
 # Thus, we will revise the model from a multi-class classification to a binary classification that distinguishes between tropical and non-tropical hurricanes.
@@ -292,7 +290,6 @@ def plot_2DClassifier(X, f, y, classifier, title):
 
 # %% [markdown] editable=true id="cbe44cb1-d702-4213-b327-d7d92dcc64f1"
 # ### SVM for binary classification
-# - with interactive hyperparameters w/ ipywidgets
 
 # %% [markdown] id="FHVD03pSAQPc"
 # The hyperparameters of SVM (C and gamma) can be tuned using this widget to visualize how they effect the model results.
