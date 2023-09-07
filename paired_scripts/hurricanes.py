@@ -328,29 +328,29 @@ display(status_widget)
 
 # %% [markdown] id="a9338059-b680-436f-85a0-a0896ea31e26"
 # ## Feature uncertainty experiment
-# - Assume above the decision boundary(model) as a model a data annotator uses to label trocical hurricanes
-# - features X also as true measurements
-# - Re-classify X with the model to have truely annotated labels (wrt. an annotator)
+#
+# Suppose the SVM we just trained is deployed to predict whether hurricanes are tropical. Since cluster of the two categories is very close and the learned hyperplane has small margin, feature uncertainty can considerably affect the outcomes of prediction because  feature values might be products from measurements with errors. We will have a little experiment to demonstrate this. Firstly, input features of all hurricanes are predicted to have result types according to the model's decision boundary.
 
 # %% id="657cdf47-ba73-48bf-8f4a-484c3a566344" outputId="7842f721-16c0-4165-f0db-6ea6b16e01f0"
-true_y = bi_svm.predict(X)
+pred_y = bi_svm.predict(X)
 
-plot_2DClassifier(X, selected_features, true_y, bi_svm, "True measurements wrt. annotator")
+plot_2DClassifier(X, selected_features, pred_y, bi_svm, "Predicted types for all hurricanes")
 
 
 # %% [markdown] id="e712651f-0967-4c58-85fc-11f141e15f9b"
-# ### Add Gaussian noise to features
-# - Expected: Affecting data points in the vicinity of decision boundaries to be the mislabeled data instances
+# Then, we add some noises to the input features following a specified standard deviation and plot to see where the data points are relative to the decision boundary. Additionally, the amount of misclassified instances after adding noises is shown.
+#
+# We can see that noises in the features have an apparent impact to the classification outcomes, especially with close clusters of different classes.
 
 # %% editable=true colab={"referenced_widgets": ["b46a465ed5a54a48ac27bb1255f6dd11", "fdbc6259cfd74a46bbe1bfedc70c6ee8"]} id="5f722163-ddff-4c01-bd19-0b7e63fe1f6a" outputId="46c9538c-1296-4122-d3c0-3d2ba515c1f2"
 def noise_interact(sd):
     status_widget.value = 'Calculating...'
     noisy_X = X + np.random.normal(loc=0.0, scale=sd, size=X.shape)
 
-    plot_2DClassifier(noisy_X, selected_features, true_y, bi_svm, "Noisy measurement wrt. annotator")
+    plot_2DClassifier(noisy_X, selected_features, pred_y, bi_svm, "Noisy measurement wrt. annotator")
 
     noisy_pred = bi_svm.predict(noisy_X)
-    status_widget.value = f"Noisy inputs accuracy: {bi_svm.score(noisy_X, true_y)}"
+    status_widget.value = f"%Noisy inputs misclassified: {1.0 - bi_svm.score(noisy_X, pred_y)}"
 
 sd_widget = widgets.FloatSlider(value=1., min=0.1, max=5., step=0.1, description='SD :',
     disabled=False, continuous_update=False, orientation='horizontal', readout=True, readout_format='.1f'
