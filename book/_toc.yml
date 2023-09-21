@@ -6,4 +6,5 @@ root: intro
 chapters:
 - file: penguins
 - file: hurricanes
+- file: externals
 - file: bibliography
