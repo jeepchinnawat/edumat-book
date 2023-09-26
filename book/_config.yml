@@ -41,3 +41,8 @@ launch_buttons:
   notebook_interface: jupyterlab  # or "classic"
   binderhub_url: https://mybinder.org  # The URL for your BinderHub (e.g., https://mybinder.org)
   colab_url: https://colab.research.google.com
+
+#######################################################################################
+# Advanced and power-user settings
+sphinx:
+  extra_extensions          : ['sphinxcontrib.bibtex'] # A list of extra extensions to load by Sphinx.
