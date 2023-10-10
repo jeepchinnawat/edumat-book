@@ -8,9 +8,9 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.6
 #   kernelspec:
-#     display_name: edumat
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: edumat
+#     name: python3
 # ---
 
 # %% [markdown] editable=true slideshow={"slide_type": ""}
