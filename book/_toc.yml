@@ -3,8 +3,15 @@
 
 format: jb-book
 root: intro
-chapters:
-- file: penguins
-- file: hurricanes
-- file: externals
-- file: bibliography
+parts:
+- caption: Tutorials
+  chapters:
+  - file: penguins
+  - file: hurricanes
+- caption: Gallery
+  chapters:
+  - file: externals
+- caption: Back Matter
+  chapters:
+  - file: bibliography
+    title: References
