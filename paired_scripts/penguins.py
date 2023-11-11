@@ -8,21 +8,38 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.6
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python [conda env:edumat]
 #     language: python
-#     name: python3
+#     name: conda-env-edumat-py
 # ---
 
 # %% [markdown] editable=true slideshow={"slide_type": ""}
 # # Palmer Penguins
 #
-# In this notebook, a classification of penguins into 3 species is carried out based on [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. The dataset in CSV format used is downloaded from [here](https://gist.github.com/slopp/ce3b90b9168f2f921784de84fa445651). Additionally, a simple mislabeling experiment is introduced as a start in learning data annotation quality and uncertainy and their outcomes.
+# In this notebook, a classification of penguins into 3 species is carried out based on [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. The dataset in CSV format used is downloaded from [here](https://gist.github.com/slopp/ce3b90b9168f2f921784de84fa445651). Additionally, a simple mislabeling experiment is carried out to learn the outcomes of uncertainty in data annotation quality.
 #
-# The following tutorial is partly from [Increase citations, ease review & foster collaboration](https://ml.recipes) book by [Jesper Dramsch](https://ml.recipes).
+# After some data explpration, a SVM model is trained to classify species of penguins based on 2 features selected from a data analysis.Finally, we look into a simple experiment of how decreasing in annotation quality, in which some labels are misclassified, would affect the outcome of an ML model.
 #
-# After some data inspection, a SVM model is trained to classify species of penguins based on 2 features selected from a data analysis.Finally, we look into a simple experiment of how decreasing in annotation quality, in which some labels are misclassified, would affect the outcome of an ML model.
+# This tutorial contains machine learning routines from [Increase citations, ease review & foster collaboration](https://ml.recipes) book by [Jesper Dramsch](https://ml.recipes).
 
-# %% [markdown] editable=true slideshow={"slide_type": ""}
+# %% [markdown]
+# ## Prerequisites
+# - Python programming basics such as imports, variables, loops, and list indexing and slicing.
+# - Basics of multi-dimensional array and tabular libraries like `numpy` and `pandas`
+# - Data plotting with `matplotlib`
+#
+# If you run the notebook locally, it is recommended to do it with a virtual environment or environment management like `conda`.
+#
+# The libraries required are:
+# - `numpy`
+# - `pandas`
+# - `matplotlib`
+# - `seaborn`
+# - `sklearn`
+# - `ipywidgets`
+#
+# ## Read the data file
+#
 # Let's have the data loaded and briefly look at the data.
 
 # %%
@@ -32,7 +49,7 @@ import numpy as np
 
 DATA_FOLDER = Path("..") / "data"
 DATA_FILEPATH = DATA_FOLDER / "penguins.csv"
-# Execute on cloud platform? (e.g. colab), try this path instead
+# If the above path doesn't work on cloud platform (e.g. colab), try this path instead
 # DATA_FILEPATH = "https://raw.githubusercontent.com/jeepchinnawat/edumat-book/main/data/penguins.csv"
 
 penguins = pd.read_csv(DATA_FILEPATH)
@@ -60,11 +77,14 @@ penguins = penguins[features+target]
 penguins
 
 # %% [markdown]
-# ## Exploratory Data Analysis
-# Let's have a look into the data in details with statistics and visualizations.
+# ## Data Inspection
+# Let's have a quick look into the data in details with statistics and visualizations. We can look at simple statistics of our numerical features with `describe` function of pandas dataframe.
 
 # %%
 penguins.describe()
+
+# %% [markdown]
+# The python data visualization library `seaborn` offers ready-made statistical plots based on `matplotlib`. The one we will use here is `pairplot` to show species joint distributions of every feature pair, and single distributions for each feature in diagonal plots.
 
 # %%
 import seaborn as sns
@@ -73,7 +93,7 @@ pairplot_figure = sns.pairplot(penguins[num_features+['species']], hue="species"
 
 # %% [markdown]
 # ### Features Selection
-# The complete pairwise plots of our features show that there are 2-feature pairs between `bill_length_mm` and any of `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g` being able to separate 3 species the best.
+# The complete pairwise plots of our features show that there are 2-feature pairs between `bill_length_mm` and any of `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g` being able to separate 3 species the best. And of course, no single feature (distributions in diagonal plots) can separate all 3 species.
 
 # %% [markdown]
 # We will firstly make a classification model with 2 features for the sake of visualization. The selected features are `bill_length_mm` and `flipper_length_mm`.
@@ -84,22 +104,25 @@ selected_features = ['bill_length_mm', 'flipper_length_mm']
 
 # %% [markdown]
 # ## Data Splitting
-# Machine learning algorithms need a dataset to train on to be able to predict unseen data and that data splitting comes into play. We split the whole dataset into a training set, generally a bigger portion, and the rest as a testing set to act as unseen data for model evaluation.
+# Machine learning algorithms need a dataset to train on to be able to predict unseen data and that data splitting comes into play. We split the whole dataset into a training set, generally a bigger portion, and the rest as a testing set to act as unseen data for model evaluation. To do this, we use `train_test_split` utility method in sci-kit learn library, with the portion of training set specified.
 
 # %%
 from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(penguins[selected_features], penguins[target[0]], random_state=20, train_size=.7)
-X_train.head()
 
 # %%
-y_train.head()
+penguins.shape
+
+# %% [markdown]
+# Now check the shapes of splitting results.
 
 # %%
-print(X_train.shape)
-print(y_train.shape)
-print(X_test.shape)
-print(y_test.shape)
+print("Total data: ", penguins.shape[0])
+print("Training features: ", X_train.shape)
+print("Training labels: ", y_train.shape)
+print("Testing features: ", X_test.shape)
+print("Testing labels: ", y_test.shape)
 
 # %% [markdown]
 # ## Model Training
@@ -270,3 +293,5 @@ display(status_widget)
 # The "Training size" slider controls the number of training data split and the rest will be in the testing split. The "Mislabeled" slider specifies the amount of incorrectly labeled data in the whole dataset because regardless of training or testing splits they are from the same data acquisition and annotation processes.
 #
 # It can be observe from the plot that, as the number of mislabeled data increases, the overall data are cluttered meaning the true shape of data is not presented. The decision boundaries are also affected, which will not be a good enough model to classify unseen data.
+
+# %%

@@ -15,9 +15,29 @@
 
 # %% [markdown] id="dd193994-d69d-438f-a874-061e1dd4a01e"
 # # North Atlantic Hurricanes
-# The learning objectives of this notebook are to carry out feature selection for a classification model, train a classification model for types of hurricanes, and understand outcomes of feature uncertainty based on a experiment.
+#
+# The learning objectives of this notebook are to carry out feature selection for a classification model, train a classification model for types of hurricanes, and understand outcomes of feature uncertainty based on an experiment.
 #
 # The [North Atlantic Hurricanes dataset](https://myweb.fsu.edu/jelsner/temp/Data.html) used is developed by James B. Elsner and colleagues containing hurricanes recorded during the years 1944 to 2000. Each hurricane instance contains the year, the name (if it was named), the coordinates where it started, the last coordinates measured, the maximum coordinates (based on an aspect that an increment means closer to the coast), the maximum intensity, and the type. They are labeled into 3 types: tropical hurricanes (Type 0), hurricanes under baroclinic influences (Type 1), and hurricanes from baroclinic initiation (Type 3).
+#
+# ## Prerequisites
+# - Python programming basics such as imports, variables, loops, and list indexing and slicing.
+# - Basics of multi-dimensional array and tabular libraries like `numpy` and `pandas`
+# - Data plotting with `matplotlib`
+# - Basics of statistics, namely probability distribution and correlation
+# - Some understanding of machine learning algorithms such as SVM and Random forest
+#
+# If you run the notebook locally, it is recommended to do it with a virtual environment or environment management like `conda`.
+#
+# The libraries required are:
+# - `numpy`
+# - `pandas`
+# - `matplotlib`
+# - `seaborn`
+# - `sklearn`
+# - `ipywidgets`
+#
+# ## Read the data file
 #
 # Let's start with loading the data.
 
@@ -36,7 +56,7 @@ hurricanes = pd.read_csv(DATA_FILEPATH)
 hurricanes
 
 # %% [markdown] id="9fd1fa0d-da1a-43cf-aec5-fa0676b4eeef"
-# ## Introductory Data Inspection
+# ## Data Inspection
 
 # %% id="ac6fc382-8ee7-4fa8-86ce-d91aa3fe1dc4" outputId="fc2fd39e-e3ad-4742-bd94-97b98f4a2188"
 hurricanes.info()
@@ -49,7 +69,7 @@ features = ['FirstLat','FirstLon','MaxLat','MaxLon','LastLat','LastLon','MaxInt'
 label = ['Type']
 
 # %% [markdown] id="e81c41ba-1d8d-4037-8376-0208a0c56da7"
-# We can look at simple statistics of our features with `describe` function of pandas' dataframe.
+# We can look at simple statistics of our features with `describe` function of pandas dataframe.
 
 # %% id="54c42903-67b9-4bd7-a6a4-a3409cf23d01" outputId="4c32c119-1e58-4175-e0fd-0e2721dfae85"
 hurricanes[features].describe()
