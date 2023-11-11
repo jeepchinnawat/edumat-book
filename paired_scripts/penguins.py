@@ -8,9 +8,9 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.6
 #   kernelspec:
-#     display_name: Python [conda env:edumat]
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: conda-env-edumat-py
+#     name: python3
 # ---
 
 # %% [markdown] editable=true slideshow={"slide_type": ""}
