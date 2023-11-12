@@ -5,13 +5,14 @@ format: jb-book
 root: intro
 parts:
 - caption: Tutorials
-  chapters:
-  - file: penguins
-  - file: hurricanes
+    chapters:
+    - file: penguins
+        title: Your 1st ML with penquins
+    - file: hurricanes
 - caption: Gallery
-  chapters:
-  - file: externals
+    chapters:
+    - file: externals
 - caption: Back Matter
-  chapters:
-  - file: bibliography
-    title: References
+    chapters:
+    - file: bibliography
+        title: References

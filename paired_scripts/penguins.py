@@ -20,7 +20,7 @@
 #
 # After some data explpration, a SVM model is trained to classify species of penguins based on 2 features selected from a data analysis.Finally, we look into a simple experiment of how decreasing in annotation quality, in which some labels are misclassified, would affect the outcome of an ML model.
 #
-# This tutorial contains machine learning routines from [Increase citations, ease review & foster collaboration](https://ml.recipes) book by [Jesper Dramsch](https://ml.recipes).
+# This tutorial contains machine learning routines from [ml.recipes](https://ml.recipes) book by [Jesper Dramsch](https://ml.recipes).
 
 # %% [markdown]
 # ## Prerequisites
