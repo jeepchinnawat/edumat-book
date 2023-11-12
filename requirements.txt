@@ -1,2 +1,2 @@
 -r requirements/book.txt
--r requirements/tutorial.txt
+-r requirements/tutorials.txt
