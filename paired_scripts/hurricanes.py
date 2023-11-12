@@ -13,7 +13,7 @@
 #     name: python3
 # ---
 
-# %% [markdown] id="dd193994-d69d-438f-a874-061e1dd4a01e"
+# %% [markdown] id="dd193994-d69d-438f-a874-061e1dd4a01e" editable=true slideshow={"slide_type": ""}
 # # North Atlantic Hurricanes
 #
 # The learning objectives of this notebook are to carry out feature selection for a classification model, train a classification model for types of hurricanes, and understand outcomes of feature uncertainty based on an experiment.
@@ -34,7 +34,7 @@
 # - `pandas`
 # - `matplotlib`
 # - `seaborn`
-# - `sklearn`
+# - `scikit-learn`
 # - `ipywidgets`
 #
 # ## Read the data file

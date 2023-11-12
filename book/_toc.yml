@@ -4,6 +4,9 @@
 format: jb-book
 root: intro
 parts:
+- caption: Getting started
+  chapters:
+  - file: installation
 - caption: Tutorials
   chapters:
   - file: penguins

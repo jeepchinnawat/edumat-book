@@ -1,10 +1,2 @@
-numpy
-jupyter
-scikit-learn
-matplotlib
-seaborn
-pandas
-ipywidgets
-jupyter-book
-ghp-import
-jupytext
+-r requirements/book.txt
+-r requirements/tutorial.txt

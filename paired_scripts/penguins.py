@@ -18,11 +18,11 @@
 #
 # In this notebook, a classification of penguins into 3 species is carried out based on [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/) {cite:p}`palmerpenguins`. The dataset in CSV format used is downloaded from [here](https://gist.github.com/slopp/ce3b90b9168f2f921784de84fa445651). Additionally, a simple mislabeling experiment is carried out to learn the outcomes of uncertainty in data annotation quality.
 #
-# After some data explpration, a SVM model is trained to classify species of penguins based on 2 features selected from a data analysis.Finally, we look into a simple experiment of how decreasing in annotation quality, in which some labels are misclassified, would affect the outcome of an ML model.
+# After some data explpration, a simple SVM model is trained to classify species of penguins based on 2 features selected from a data analysis.Finally, we look into a simple experiment of how decreasing in annotation quality, in which some labels are misclassified, would affect the outcome of an ML model.
 #
 # This tutorial contains machine learning routines from [ml.recipes](https://ml.recipes) book by [Jesper Dramsch](https://ml.recipes).
 
-# %% [markdown]
+# %% [markdown] editable=true slideshow={"slide_type": ""}
 # ## Prerequisites
 # - Python programming basics such as imports, variables, loops, and list indexing and slicing.
 # - Basics of multi-dimensional array and tabular libraries like `numpy` and `pandas`
@@ -35,7 +35,7 @@
 # - `pandas`
 # - `matplotlib`
 # - `seaborn`
-# - `sklearn`
+# - `scikit-learn`
 # - `ipywidgets`
 #
 # ## Read the data file
@@ -293,5 +293,3 @@ display(status_widget)
 # The "Training size" slider controls the number of training data split and the rest will be in the testing split. The "Mislabeled" slider specifies the amount of incorrectly labeled data in the whole dataset because regardless of training or testing splits they are from the same data acquisition and annotation processes.
 #
 # It can be observe from the plot that, as the number of mislabeled data increases, the overall data are cluttered meaning the true shape of data is not presented. The decision boundaries are also affected, which will not be a good enough model to classify unseen data.
-
-# %%
