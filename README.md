@@ -1,8 +1,8 @@
 # [FG-AI4NDM Educational Notebooks](https://jeepchinnawat.github.io/)
 
-This collection of tutorial notebooks aims to support machine learning applications and researches for Natural Disaster Management (NDM). The body of work is still in an on-going development so the book will continue to evolve, with the emphasis on python-based, open(source and data), and geoscientific AI contents.
+This collection of tutorial notebooks aims to support machine learning applications and researches for Natural Disaster Management (NDM). The body of work is still in an on-going development so the book will continue to evolve, with the emphasis on open(-source and -data), hazard-related, and geoscientific AI contents.
 
-## Installation
+## Getting started
 
 ### Run online
 

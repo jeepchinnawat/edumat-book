@@ -8,9 +8,9 @@ You can run the whole book with all tutorials online on cloud platform. The butt
 
 Also, every tutorial can be run online individually with Binder or Google Colab, available at the launch button at the top of the respective page.
 
-:::{caution}
+```{caution}
 The caveat is your changes will not be saved unless you download the notebooks before closing the cloud platform.
-:::
+```
 
 ## Run locally
 
