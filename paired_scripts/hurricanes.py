@@ -364,18 +364,18 @@ plot_2DClassifier(X, selected_features, pred_y, bi_svm, "Predicted types for all
 
 # %% editable=true colab={"referenced_widgets": ["b46a465ed5a54a48ac27bb1255f6dd11", "fdbc6259cfd74a46bbe1bfedc70c6ee8"]} id="5f722163-ddff-4c01-bd19-0b7e63fe1f6a" outputId="46c9538c-1296-4122-d3c0-3d2ba515c1f2"
 def noise_interact(sd):
-    status_widget.value = 'Calculating...'
+    status_widget_2.value = 'Calculating...'
     noisy_X = X + np.random.normal(loc=0.0, scale=sd, size=X.shape)
 
     plot_2DClassifier(noisy_X, selected_features, pred_y, bi_svm, "Noisy measurement wrt. annotator")
 
     noisy_pred = bi_svm.predict(noisy_X)
-    status_widget.value = f"%Noisy inputs misclassified: {1.0 - bi_svm.score(noisy_X, pred_y)}"
+    status_widget_2.value = f"%Noisy inputs misclassified: {1.0 - bi_svm.score(noisy_X, pred_y)}"
 
 sd_widget = widgets.FloatSlider(value=1., min=0.1, max=5., step=0.1, description='SD :',
     disabled=False, continuous_update=False, orientation='horizontal', readout=True, readout_format='.1f'
 )
-status_widget = widgets.Label(value='')
+status_widget_2 = widgets.Label(value='')
 
 interact(noise_interact, sd=sd_widget)
-display(status_widget)
+display(status_widget_2)
