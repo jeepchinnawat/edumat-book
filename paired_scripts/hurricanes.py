@@ -16,6 +16,8 @@
 # %% [markdown] id="dd193994-d69d-438f-a874-061e1dd4a01e" editable=true slideshow={"slide_type": ""}
 # # North Atlantic Hurricanes
 #
+# Tropical cyclones, known as hurricanes when occurring in the North Atlantic and few other places, have caused the most deaths and destruction with an average cost of $22.8 billion per event (since 1980, as of August 2023) in the U.S. history of all recorded weather disasters; NOAA reported. Earlier detection of tropical hurricanes is desirable and would be beneficial to the general public, decision makers, and first responders to prepare for potential threats. Reanalysis of historical hurricane data through data science techniques like classification or clustering would also help give insight about hurricanes (e.g. when and where strong ones formed), then in turn, help develop awareness and early detection systems.
+#
 # The learning objectives of this notebook are to carry out feature selection for a classification model, train a classification model for types of hurricanes, and understand outcomes of feature uncertainty based on an experiment.
 #
 # The [North Atlantic Hurricanes dataset](https://myweb.fsu.edu/jelsner/temp/Data.html) used is developed by James B. Elsner and colleagues containing hurricanes recorded during the years 1944 to 2000. Each hurricane instance contains the year, the name (if it was named), the coordinates where it started, the last coordinates measured, the maximum coordinates (based on an aspect that an increment means closer to the coast), the maximum intensity, and the type. They are labeled into 3 types: tropical hurricanes (Type 0), hurricanes under baroclinic influences (Type 1), and hurricanes from baroclinic initiation (Type 3).
