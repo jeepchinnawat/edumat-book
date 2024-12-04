@@ -17,10 +17,18 @@ Also, every tutorial can be run online individually with Binder or Google Colab,
 
 ### Run locally
 
-If you run the notebook locally, it is recommended to do it with a virtual environment or environment management like `conda`.
+If you run the notebook locally, it is recommended to do it with a virtual environment or environment management. The steps below use `conda`.
 
-You can install required dependencies using `pip`.
+1. Clone this repository
+2. Create a new conda (or any other) environment
+3. Activate the created environment and install `pip`
+4. Run `pip install -r requirements/tutorials.txt`
+5. Run `jupyter lab` and try to execute the import cell in `book/penguins.ipynb` to test the dependencies.
 
-```
-pip install -r requirements/tutorial.txt
-```
+### Build the book locally
+
+1. Run `pip install -r requirements/book.txt`
+2. Run `jupyter-book build book/`
+
+The markdown and jupyter notebook file in `book/` will then be rendered in HTML pages in `book/_build/html/`.
+Open `book/_build/html/index.html` in the browser to see or checked applied changes.
