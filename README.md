@@ -30,5 +30,7 @@ If you run the notebook locally, it is recommended to do it with a virtual envir
 1. Run `pip install -r requirements/book.txt`
 2. Run `jupyter-book build book/`
 
-The markdown and jupyter notebook file in `book/` will then be rendered in HTML pages in `book/_build/html/`.
+The markdown and jupyter notebook files in `book/` will then be rendered in HTML pages in `book/_build/html/`.
 Open `book/_build/html/index.html` in the browser to see or checked applied changes.
+
+The book is automically built and hosted at https://jeepchinnawat.github.io/edumat-book/ when a push or pull request updating the files in `book/` is made to the main branch.
