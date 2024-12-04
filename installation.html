@@ -374,11 +374,14 @@ document.write(`
 </section>
 <section id="run-locally">
 <h2>Run locally<a class="headerlink" href="#run-locally" title="Permalink to this heading">#</a></h2>
-<p>If you run the notebook locally, it is recommended to do it with a virtual environment or environment management like <code class="docutils literal notranslate"><span class="pre">conda</span></code>.</p>
-<p>You can install required dependencies using <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">/</span><span class="n">tutorials</span><span class="o">.</span><span class="n">txt</span>
-</pre></div>
-</div>
+<p>If you run the notebook locally, it is recommended to do it with a virtual environment or environment management. The steps below use <code class="docutils literal notranslate"><span class="pre">conda</span></code>.</p>
+<ol class="arabic simple">
+<li><p>Clone this repository</p></li>
+<li><p>Create a new conda (or any other) environment</p></li>
+<li><p>Activate the created environment and install <code class="docutils literal notranslate"><span class="pre">pip</span></code></p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements/tutorials.txt</span></code></p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">lab</span></code> and try to execute the import cell in <code class="docutils literal notranslate"><span class="pre">book/penguins.ipynb</span></code> to test the dependencies.</p></li>
+</ol>
 </section>
 </section>
 

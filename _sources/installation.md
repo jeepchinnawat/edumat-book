@@ -14,10 +14,10 @@ The caveat is your changes will not be saved unless you download the notebooks b
 
 ## Run locally
 
-If you run the notebook locally, it is recommended to do it with a virtual environment or environment management like `conda`.
+If you run the notebook locally, it is recommended to do it with a virtual environment or environment management. The steps below use `conda`.
 
-You can install required dependencies using `pip`.
-
-```
-pip install -r requirements/tutorials.txt
-```
+1. Clone this repository
+2. Create a new conda (or any other) environment
+3. Activate the created environment and install `pip`
+4. Run `pip install -r requirements/tutorials.txt`
+5. Run `jupyter lab` and try to execute the import cell in `book/penguins.ipynb` to test the dependencies.
